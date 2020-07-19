@@ -64,7 +64,10 @@ class AdminPG
             $this->execucao($comando);
             return;
         }
-
+        if(strtolower(substr($comando, 0, 5)) == 'delet'){
+            $this->execucao($comando);
+            return;
+        }
         if(strtolower(substr($comando, 0, 6)) == 'select'){
             $this->selecao($comando);
             return;
@@ -77,6 +80,7 @@ class AdminPG
             $this->execucao($comando);
             return;
         }
+        
         
 
     }
