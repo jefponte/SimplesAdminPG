@@ -410,7 +410,7 @@ class AdminPG
 							<div class="p-5">
             
                                 <form id="login-form" class="form" action="" method="post">
-                                    <h3 class="text-center text-info">Preencha com os dados de acesso ao Postgres</h3>
+                                    <h3 class="text-center text-info">Connect to PostgreSQL</h3>
                                     <div class="form-group">
                                         <label for="host" class="text-info">Host</label><br>
                                         <input type="text" name="host" id="host" value="localhost" class="form-control">
