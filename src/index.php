@@ -57,6 +57,13 @@ if(isset($_SESSION['ATIVO'])){
           </ul>
         <form class="form-inline mt-2 mt-md-0">
             <select class="form-control mr-sm-2" type="text" aria-label="Search">
+                ';
+    if(isset($_SESSION['dbname'])){
+        echo '
+                <option value="'.$_SESSION['dbname'].'" selected>'.$_SESSION['dbname'].'</option>
+';
+    }
+    echo '
                 <option value="">Selecione um banco de dados</option>
             </select>
             <a href="?sair=1" class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</a>
