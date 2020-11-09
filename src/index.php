@@ -55,16 +55,35 @@ if(isset($_SESSION['ATIVO'])){
               <a class="nav-link disabled" href="#">Disabled</a>
             </li>
           </ul>
-        <form class="form-inline mt-2 mt-md-0">
-            <select class="form-control mr-sm-2" type="text" aria-label="Search">
+        <form id="form-dbname" class="form-inline mt-2 mt-md-0">
+            <select class="form-control mr-sm-2" type="text" aria-label="Search" name="dbname">
+            <option value="">Selecione um banco de dados</option>
                 ';
     if(isset($_SESSION['dbname'])){
         echo '
                 <option value="'.$_SESSION['dbname'].'" selected>'.$_SESSION['dbname'].'</option>
 ';
     }
+    
+    try{
+        $conexao = new PDO( 'pgsql:host='.$_SESSION['host'].' port='.$_SESSION['port'].'  user='.$_SESSION['user'].' password='.$_SESSION['password']);
+        $result = $conexao->query("SELECT datname FROM pg_database;");
+        
+        foreach($result as $linha){
+            echo '
+                <option value="'.$linha['datname'].'">'.$linha['datname'].'</option>
+';
+            
+        }
+        
+    }catch(\Exception $e){
+        echo $e -> getmessage();
+        unset($_SESSION['ATIVO']);
+    }
+    
+    
     echo '
-                <option value="">Selecione um banco de dados</option>
+
             </select>
             <a href="?sair=1" class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</a>
           </form>
@@ -114,6 +133,7 @@ if(!isset($_SESSION['ATIVO'])){
             
         }catch(\Exception $e){
             echo $e -> getmessage();
+            unset($_SESSION['ATIVO']);
         }
         
         
@@ -136,8 +156,27 @@ echo '
     </footer>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="  crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script>
+        $( "#form-dbname" ).on(\'change\', function(e) {
+            var dados = jQuery(this).serialize();
+            
+    		jQuery.ajax({
+                type: "GET",
+                url: "index.php",
+                data: dados,
+                success: function( data )
+                {
+    				console.log("Foi");
+                    window.location.href=\'index.php\';
+    
+                }
+            });
+            
+        });
+        
+    </script>
   </body>
 </html>';
