@@ -1,4 +1,5 @@
 <?php
+
 use SimplesAdminPG\AdminPG;
 include_once "SimplesAdminPG/AdminPG.php";
 if (! isset($_SESSION)) {

@@ -28,7 +28,7 @@ class AdminPG
         echo '<br>
             <form action="" method="post">
                 <div class="form-group">
-                    <label for="consulta">Consulta</label><br>
+                    <label for="consulta">Query</label><br>
                     <textarea class="form-control" id="consulta" name="consulta" rows="3">'.$consulta.'</textarea>
                 </div>
                 
@@ -428,10 +428,6 @@ class AdminPG
                                         <input type="text" name="password" id="password" value="postgres" class="form-control">
                                     </div>
 
-                                      <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck1" checked>
-                                        <label class="form-check-label" for="exampleCheck1">Keep Connected</label>
-                                      </div>
 
                                     <div class="form-group">
                                         <input type="submit" name="form-login" class="btn btn-info btn-md" value="Login">
