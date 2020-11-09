@@ -1,7 +1,7 @@
 # SimplesAdminPG
 Ferramenta simples para gerenciamento de banco postgrs. 
 
-#Como usar
+**Como usar:**
 
 ```php
 use SimplesAdminPG\AdminPG;
