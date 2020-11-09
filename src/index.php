@@ -58,7 +58,7 @@ if(isset($_SESSION['ATIVO'])){
             -->
           </ul>
         <form id="form-dbname" class="form-inline mt-2 mt-md-0">
-            <select class="form-control mr-sm-2" type="text" aria-label="Search" name="dbname">
+            <select id="select-dbname" class="form-control mr-sm-2" type="text" aria-label="Search" name="dbname">
             <option value="">Selecione um banco de dados</option>
                 ';
     if(isset($_SESSION['dbname'])){
@@ -163,19 +163,8 @@ echo '
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script>
         $( "#form-dbname" ).on(\'change\', function(e) {
-            var dados = jQuery(this).serialize();
-            
-    		jQuery.ajax({
-                type: "GET",
-                url: "index.php",
-                data: dados,
-                success: function( data )
-                {
-    				console.log("Foi");
-                    window.location.href=\'index.php\';
-    
-                }
-            });
+            var nome = $("#select-dbname").val();
+            window.location.href=\'index.php\'+\'?dbname=\'+nome;
             
         });
         
