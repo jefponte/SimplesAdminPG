@@ -1,5 +1,5 @@
 # SimplesAdminPG
-Ferramenta simples para gerenciamento de banco postgrs. 
+Simple tool for postgres database management.
 
 
 **Simple way:**
