@@ -15,3 +15,5 @@ AdminPG::main($conexao);
 Run index.php in the src folder and use the form.
 
 <img src="src/img/form.png">
+
+Nothing more to say. Just enjoy yourself!
