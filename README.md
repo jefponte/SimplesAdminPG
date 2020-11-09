@@ -1,5 +1,6 @@
 # SimplesAdminPG
 Ferramenta simples para gerenciamento de banco postgrs. 
+#Markdown
 ...
 use SimplesAdminPG\AdminPG;
 include_once "SimplesAdminPG/AdminPG.php";
