@@ -1,7 +1,20 @@
 <?php
-
-include_once "AdminPG.php";
-
+use SimplesAdminPG\AdminPG;
+include_once "SimplesAdminPG/AdminPG.php";
+if (! isset($_SESSION)) {
+    session_start();
+}
+if(isset($_GET['sair'])){
+    if (isset($_SESSION)) {
+        session_destroy();
+    }
+    echo '<meta http-equiv="refresh" content=0;url="./index.php">';
+}
+if(isset($_GET['dbname'])){
+    $_SESSION['dbname'] = $_GET['dbname'];
+    echo '<meta http-equiv="refresh" content=0;url="./index.php">';
+    
+}
 echo '
 <!DOCTYPE html>
 <html>
@@ -18,8 +31,13 @@ echo '
 </head>
 <body>
 
-    <header>
-      <!-- Fixed navbar -->
+    
+     
+          ';
+if(isset($_SESSION['ATIVO'])){
+    echo '
+<header>
+ <!-- Fixed navbar -->
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#">Fixed navbar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,23 +55,68 @@ echo '
               <a class="nav-link disabled" href="#">Disabled</a>
             </li>
           </ul>
-          <form class="form-inline mt-2 mt-md-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Pesquisar" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Pesquisar</button>
+        <form class="form-inline mt-2 mt-md-0">
+            <select class="form-control mr-sm-2" type="text" aria-label="Search">
+                <option value="">Selecione um banco de dados</option>
+            </select>
+            <a href="?sair=1" class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</a>
           </form>
         </div>
       </nav>
-    </header>
+</header>
+';
+    
+}
+
+echo '
+
+
+    
 
     <!-- Begin page content -->
     <main role="main" class="container">
-      <h1 class="mt-5">Sticky footer with fixed navbar</h1>
-      <p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS. A fixed navbar has been added with <code>padding-top: 60px;</code> on the <code>body &gt; .container</code>.</p>
+      <h1 class="mt-5">SimplesAdminPG</h1>
+      <p class="lead">Uma forma mais simples de manipular o banco de dados postgres.</p>
       ';
+if(!isset($_SESSION['ATIVO'])){
+    AdminPG::tentarLogin();
+    AdminPG::formLogin();
+}else{
 
-
-$conexao = new PDO( 'pgsql:host=localhost port=5432 dbname=ocorrencias user=postgres password=postgres');
-AdminPG::main($conexao);
+    if(isset($_SESSION['host']) && isset($_SESSION['port']) && isset($_SESSION['user']) && isset($_SESSION['password']) && isset($_SESSION['dbname']) ) {
+        try{
+            $conexao = new PDO( 'pgsql:host='.$_SESSION['host'].' port='.$_SESSION['port'].'  dbname='.$_SESSION['dbname'].'  user='.$_SESSION['user'].' password='.$_SESSION['password']);
+            AdminPG::main($conexao);
+            
+        }catch(\Exception $e){
+            echo $e -> getmessage();
+            unset($_SESSION['dbname']);
+            echo '<meta http-equiv="refresh" content=3;url="./index.php">';
+        }
+        
+        
+    }elseif(isset($_SESSION['host']) && isset($_SESSION['port']) && isset($_SESSION['user']) && isset($_SESSION['password'])){
+        try{
+            $conexao = new PDO( 'pgsql:host='.$_SESSION['host'].' port='.$_SESSION['port'].'  user='.$_SESSION['user'].' password='.$_SESSION['password']);
+            $result = $conexao->query("SELECT datname FROM pg_database;");
+            
+            foreach($result as $linha){
+                echo '<a href="?dbname='.$linha['datname'].'">'.$linha['datname'].'</a>';
+                echo '<br>';
+            }
+            
+        }catch(\Exception $e){
+            echo $e -> getmessage();
+        }
+        
+        
+        
+    }
+    
+//     $conexao = new PDO( 'pgsql:host=localhost port=5432 dbname=ocorrencias user=postgres password=postgres');
+    
+    
+}
 
 echo '
 
@@ -61,7 +124,7 @@ echo '
 
     <footer class="footer">
       <div class="container">
-        <span class="text-muted">Place sticky footer content here.</span>
+        <span class="text-muted">SimplesAdminPG.</span>
       </div>
     </footer>
     <!-- Optional JavaScript -->

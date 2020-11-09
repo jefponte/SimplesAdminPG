@@ -1,5 +1,6 @@
 <?php
-
+namespace SimplesAdminPG;
+use PDO;
 /**
  * 
  * @author Jefferson Uchoa Ponte
@@ -351,5 +352,104 @@ class AdminPG
             }
         }
         fclose($arquivo);
+    }
+    
+    public static function tentarLogin(){
+        if(!isset($_POST['form-login'])){
+            return;   
+        }
+        if(!isset($_POST['host'])){
+            echo "Host is missing";
+            return;
+        }
+        if(!isset($_POST['port'])){
+            echo "Port is missing";
+            return;
+        }
+        if(!isset($_POST['user'])){
+            echo "user is missing";
+            return;
+        }
+        if(!isset($_POST['password'])){
+            echo "password is missing";
+            return;
+        }
+        
+        
+        try{
+            new PDO( 'pgsql:host='.$_POST['host'].' port='.$_POST['port'].' user='.$_POST['user'].' password='.$_POST['password']);
+            $_SESSION['ATIVO'] = true;
+            $_SESSION['host'] = $_POST['host'];
+            $_SESSION['port'] = $_POST['port'];
+            $_SESSION['user'] = $_POST['user'];
+            $_SESSION['password'] = $_POST['password'];
+            echo '<meta http-equiv="refresh" content=0;url="./index.php">';
+        }catch(\Exception $e){
+            echo $e -> getmessage();
+        }
+        
+        
+
+    }
+    public static function formLogin(){
+        echo '
+            
+<div class="container">
+            
+	<!-- Outer Row -->
+	<div class="row justify-content-center">
+            
+		<div class="col-xl-6 col-lg-12 col-md-9">
+            
+			<div class="card o-hidden border-0 shadow-lg my-5">
+				<div class="card-body p-0">
+					<!-- Nested Row within Card Body -->
+					<div class="row">
+            
+						<div class="col-lg-12">
+							<div class="p-5">
+            
+                                <form id="login-form" class="form" action="" method="post">
+                                    <h3 class="text-center text-info">Preencha com os dados de acesso ao Postgres</h3>
+                                    <div class="form-group">
+                                        <label for="host" class="text-info">Host</label><br>
+                                        <input type="text" name="host" id="host" value="localhost" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="port" class="text-info">PORT</label><br>
+                                        <input type="text" name="port" id="port" value="5432" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user" class="text-info">User</label><br>
+                                        <input type="text" name="user" id="user" value="postgres" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password" class="text-info">Password</label><br>
+                                        <input type="text" name="password" id="password" value="postgres" class="form-control">
+                                    </div>
+
+                                      <div class="form-group form-check">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck1" checked>
+                                        <label class="form-check-label" for="exampleCheck1">Keep Connected</label>
+                                      </div>
+
+                                    <div class="form-group">
+                                        <input type="submit" name="form-login" class="btn btn-info btn-md" value="Login">
+                                    </div>
+            
+                                </form>
+            
+            
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+            
+            
+';
     }
 }
