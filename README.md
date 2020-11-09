@@ -11,4 +11,7 @@ $conexao = new PDO( 'pgsql:host=localhost port=5432 dbname=ocorrencias user=post
 AdminPG::main($conexao);
 ```
 
-<img src="https://kinsta.com/pt/wp-content/uploads/sites/3/2019/08/configurando-formulario-google.png">
+**Practical way:**
+Run index.php in the src folder and use the form.
+
+<img src="src/img/form.png">
