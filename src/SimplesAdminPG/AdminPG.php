@@ -81,6 +81,10 @@ class AdminPG
             $this->execucao($comando);
             return;
         }
+        if(strtolower(substr($comando, 0, 6)) == 'update'){
+            $this->execucao($comando);
+            return;
+        }
         
         
 
