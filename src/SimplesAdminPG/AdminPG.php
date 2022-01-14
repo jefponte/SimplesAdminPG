@@ -379,14 +379,20 @@ class AdminPG
             return;
         }
         
-        
+        $dbname = "";
+        if(isset($_POST['dbname'])){
+            $dbname = 'dbname=' .$_POST['dbname'];
+        }
         try{
-            new PDO( 'pgsql:host='.$_POST['host'].' port='.$_POST['port'].' user='.$_POST['user'].' password='.$_POST['password']);
+            new PDO( 'pgsql:host='.$_POST['host'].' port='.$_POST['port'].' '.$dbname.' user='.$_POST['user'].' password='.$_POST['password']);
             $_SESSION['ATIVO'] = true;
             $_SESSION['host'] = $_POST['host'];
             $_SESSION['port'] = $_POST['port'];
             $_SESSION['user'] = $_POST['user'];
             $_SESSION['password'] = $_POST['password'];
+            if(isset($_POST['dbname'])){
+                $_SESSION['dbname'] = $_POST['dbname'];
+            }
             echo '<meta http-equiv="refresh" content=0;url="./index.php">';
         }catch(\Exception $e){
             echo $e -> getmessage();
@@ -431,7 +437,10 @@ class AdminPG
                                         <label for="password" class="text-info">Password</label><br>
                                         <input type="text" name="password" id="password" value="postgres" class="form-control">
                                     </div>
-
+                                    <div class="form-group">
+                                        <label for="dbname" class="text-info">dbname</label><br>
+                                        <input type="text" name="dbname" id="dbname" value="" class="form-control" placeholder="dbname">
+                                    </div>
 
                                     <div class="form-group">
                                         <input type="submit" name="form-login" class="btn btn-info btn-md" value="Login">
