@@ -2,9 +2,9 @@
 namespace SimplesAdminPG;
 use PDO;
 /**
- * 
+ *
  * @author Jefferson Uchoa Ponte
- * Ferramenta para programador para facilitar manipulação de banco de dados postgres. 
+ * Ferramenta para programador para facilitar manipulação de banco de dados postgres.
  *
  */
 class AdminPG
@@ -22,16 +22,16 @@ class AdminPG
     {
         $consulta = "";
         if(isset($_POST['consulta'])){
-            $consulta = $_POST['consulta'];    
+            $consulta = $_POST['consulta'];
         }
-        
+
         echo '<br>
             <form action="" method="post">
                 <div class="form-group">
                     <label for="consulta">Query</label><br>
                     <textarea class="form-control" id="consulta" name="consulta" rows="3">'.$consulta.'</textarea>
                 </div>
-                
+
                 <input type="submit" class="btn btn-primary" name="enviar">
             </form><hr>';
         if (! isset($_POST['consulta'])) {
@@ -39,7 +39,7 @@ class AdminPG
         }
         $consulta = $_POST['consulta'];
         $comandos = explode(";", $consulta);
-        
+
         if(count($comandos) == 0){
             return;
         }
@@ -55,7 +55,7 @@ class AdminPG
             return;
         }
 
-        
+
         if(strtolower(substr($comando, 0, 4)) == 'drop'){
             $this->selecao($comando);
             return;
@@ -85,8 +85,8 @@ class AdminPG
             $this->execucao($comando);
             return;
         }
-        
-        
+
+
 
     }
     public function execucao($statement){
@@ -94,23 +94,23 @@ class AdminPG
         echo $this->conexao->exec($statement);
         echo '<br>';
         if($this->conexao->errorInfo()[2] != null){
-            echo "Mensagem de erro retornada: ".$this->conexao->errorInfo()[2]."<br>";  
+            echo "Mensagem de erro retornada: ".$this->conexao->errorInfo()[2]."<br>";
             echo "<br>";
         }
         echo '<hr>';
-        
+
     }
     public function selecao($statement)
     {
-        
+
         echo '<p>Consulta: '.$statement.'</p>';
         $i = 0;
         $result = $this->conexao->query($statement);
         if($this->conexao->errorInfo()[2] != null){
-            echo "Mensagem de erro retornada: ".$this->conexao->errorInfo()[2]."<hr>";  
+            echo "Mensagem de erro retornada: ".$this->conexao->errorInfo()[2]."<hr>";
             return;
         }
-        
+
         echo '<table border=1>';
         foreach ($result as $linha) {
             if ($i == 0) {
@@ -135,12 +135,12 @@ class AdminPG
         echo '<hr>';
     }
 
-    
+
     public function aplicacao(PDO $conexao)
     {
         $this->conexao = $conexao;
         $this->comandos();
-        $sql = "SELECT schemaname AS esquema, tablename AS tabela, tableowner AS dono 
+        $sql = "SELECT schemaname AS esquema, tablename AS tabela, tableowner AS dono
 				FROM pg_catalog.pg_tables
 				WHERE schemaname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
 				ORDER BY schemaname, tablename";
@@ -154,7 +154,7 @@ class AdminPG
 			c.relname,
 			a.attname as column,
 			pg_catalog.format_type(a.atttypid, a.atttypmod) as datatype
-		
+
 			from pg_catalog.pg_attribute a
 			inner join pg_stat_user_tables c on a.attrelid = c.relid
 			WHERE
@@ -181,20 +181,20 @@ class AdminPG
                 echo '<p>PK: <b>' . $linhaPK['chave_pk'] . '</b></p>';
             }
 
-            $sqlChaves = "SELECT   
-            a.attname AS atributo,   
-            clf.relname AS tabela_ref,   
-            af.attname AS atributo_ref   
-            FROM pg_catalog.pg_attribute a   
+            $sqlChaves = "SELECT
+            a.attname AS atributo,
+            clf.relname AS tabela_ref,
+            af.attname AS atributo_ref
+            FROM pg_catalog.pg_attribute a
             JOIN pg_catalog.pg_class cl ON (a.attrelid = cl.oid AND cl.relkind = 'r')
-            JOIN pg_catalog.pg_namespace n ON (n.oid = cl.relnamespace)   
-            JOIN pg_catalog.pg_constraint ct ON (a.attrelid = ct.conrelid AND   
-            ct.confrelid != 0 AND ct.conkey[1] = a.attnum)   
+            JOIN pg_catalog.pg_namespace n ON (n.oid = cl.relnamespace)
+            JOIN pg_catalog.pg_constraint ct ON (a.attrelid = ct.conrelid AND
+            ct.confrelid != 0 AND ct.conkey[1] = a.attnum)
             JOIN pg_catalog.pg_class clf ON (ct.confrelid = clf.oid AND clf.relkind = 'r')
-            JOIN pg_catalog.pg_namespace nf ON (nf.oid = clf.relnamespace)   
-            JOIN pg_catalog.pg_attribute af ON (af.attrelid = ct.confrelid AND   
-            af.attnum = ct.confkey[1])   
-            WHERE   
+            JOIN pg_catalog.pg_namespace nf ON (nf.oid = clf.relnamespace)
+            JOIN pg_catalog.pg_attribute af ON (af.attrelid = ct.confrelid AND
+            af.attnum = ct.confkey[1])
+            WHERE
             cl.relname = '$nomeDaTabela'";
             $resultChaves = $conexao->query($sqlChaves);
             foreach ($resultChaves as $linhaChaves) {
@@ -237,7 +237,7 @@ class AdminPG
     public function exportarDados()
     {
         $sequencias = array();
-        
+
         $conexao = $this->conexao;
 
         $sql = "SELECT schemaname AS esquema, tablename AS tabela, tableowner AS dono
@@ -253,7 +253,7 @@ class AdminPG
 			c.relname,
 			a.attname as column,
 			pg_catalog.format_type(a.atttypid, a.atttypmod) as datatype
-			
+
 			from pg_catalog.pg_attribute a
 			inner join pg_stat_user_tables c on a.attrelid = c.relid
 			WHERE
@@ -357,10 +357,10 @@ class AdminPG
         }
         fclose($arquivo);
     }
-    
+
     public static function tentarLogin(){
         if(!isset($_POST['form-login'])){
-            return;   
+            return;
         }
         if(!isset($_POST['host'])){
             echo "Host is missing";
@@ -378,7 +378,7 @@ class AdminPG
             echo "password is missing";
             return;
         }
-        
+
         $dbname = "";
         if(isset($_POST['dbname'])){
             $dbname = 'dbname=' .$_POST['dbname'];
@@ -397,28 +397,28 @@ class AdminPG
         }catch(\Exception $e){
             echo $e -> getmessage();
         }
-        
-        
+
+
 
     }
     public static function formLogin(){
         echo '
-            
+
 <div class="container">
-            
+
 	<!-- Outer Row -->
 	<div class="row justify-content-center">
-            
+
 		<div class="col-xl-6 col-lg-12 col-md-9">
-            
+
 			<div class="card o-hidden border-0 shadow-lg my-5">
 				<div class="card-body p-0">
 					<!-- Nested Row within Card Body -->
 					<div class="row">
-            
+
 						<div class="col-lg-12">
 							<div class="p-5">
-            
+
                                 <form id="login-form" class="form" action="" method="post">
                                     <h3 class="text-center text-info">Connect to PostgreSQL</h3>
                                     <div class="form-group">
@@ -445,10 +445,10 @@ class AdminPG
                                     <div class="form-group">
                                         <input type="submit" name="form-login" class="btn btn-info btn-md" value="Login">
                                     </div>
-            
+
                                 </form>
-            
-            
+
+
 							</div>
 						</div>
 					</div>
@@ -457,8 +457,8 @@ class AdminPG
 		</div>
 	</div>
 </div>
-            
-            
+
+
 ';
     }
 }

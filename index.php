@@ -1,7 +1,9 @@
 <?php
 
 use SimplesAdminPG\AdminPG;
-include_once "SimplesAdminPG/AdminPG.php";
+include_once "AdminPG.php";
+
+
 if (! isset($_SESSION)) {
     session_start();
 }
@@ -14,7 +16,7 @@ if(isset($_GET['sair'])){
 if(isset($_GET['dbname'])){
     $_SESSION['dbname'] = $_GET['dbname'];
     echo '<meta http-equiv="refresh" content=0;url="./index.php">';
-    
+
 }
 echo '
 <!DOCTYPE html>
@@ -26,38 +28,24 @@ echo '
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
     <title>SimplesAdminPG</title>
 
 </head>
 <body>
 
-    
-     
+
+
           ';
 if(isset($_SESSION['ATIVO'])){
     echo '
 <header>
- 
+
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="#">SimplesAdminPG</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-          <ul class="navbar-nav mr-auto">
-            <!--
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-            -->
-          </ul>
         <form id="form-dbname" class="form-inline mt-2 mt-md-0">
             <select id="select-dbname" class="form-control mr-sm-2" type="text" aria-label="Search" name="dbname">
             <option value="">Selecione um banco de dados</option>
@@ -67,24 +55,24 @@ if(isset($_SESSION['ATIVO'])){
                 <option value="'.$_SESSION['dbname'].'" selected>'.$_SESSION['dbname'].'</option>
 ';
     }
-    
+
     try{
         $conexao = new PDO( 'pgsql:host='.$_SESSION['host'].' port='.$_SESSION['port'].'  user='.$_SESSION['user'].' password='.$_SESSION['password']);
         $result = $conexao->query("SELECT datname FROM pg_database;");
-        
+
         foreach($result as $linha){
             echo '
                 <option value="'.$linha['datname'].'">'.$linha['datname'].'</option>
 ';
-            
+
         }
-        
+
     }catch(\Exception $e){
         echo $e -> getmessage();
         unset($_SESSION['ATIVO']);
     }
-    
-    
+
+
     echo '
 
             </select>
@@ -94,13 +82,13 @@ if(isset($_SESSION['ATIVO'])){
       </nav>
 </header>
 ';
-    
+
 }
 
 echo '
 
 
-    
+
 
     <!-- Begin page content -->
     <main role="main" class="container">
@@ -116,36 +104,36 @@ if(!isset($_SESSION['ATIVO'])){
         try{
             $conexao = new PDO( 'pgsql:host='.$_SESSION['host'].' port='.$_SESSION['port'].'  dbname='.$_SESSION['dbname'].'  user='.$_SESSION['user'].' password='.$_SESSION['password']);
             AdminPG::main($conexao);
-            
+
         }catch(\Exception $e){
             echo $e -> getmessage();
             unset($_SESSION['dbname']);
             echo '<meta http-equiv="refresh" content=3;url="./index.php">';
         }
-        
-        
+
+
     }elseif(isset($_SESSION['host']) && isset($_SESSION['port']) && isset($_SESSION['user']) && isset($_SESSION['password'])){
         try{
             $conexao = new PDO( 'pgsql:host='.$_SESSION['host'].' port='.$_SESSION['port'].'  user='.$_SESSION['user'].' password='.$_SESSION['password']);
             $result = $conexao->query("SELECT datname FROM pg_database;");
-            
+
             foreach($result as $linha){
                 echo '<a href="?dbname='.$linha['datname'].'">'.$linha['datname'].'</a>';
                 echo '<br>';
             }
-            
+
         }catch(\Exception $e){
             echo $e -> getmessage();
             unset($_SESSION['ATIVO']);
         }
-        
-        
-        
+
+
+
     }
-    
+
 //     $conexao = new PDO( 'pgsql:host=localhost port=5432 dbname=ocorrencias user=postgres password=postgres');
-    
-    
+
+
 }
 
 echo '
@@ -166,9 +154,9 @@ echo '
         $( "#form-dbname" ).on(\'change\', function(e) {
             var nome = $("#select-dbname").val();
             window.location.href=\'index.php\'+\'?dbname=\'+nome;
-            
+
         });
-        
+
     </script>
   </body>
 </html>';
