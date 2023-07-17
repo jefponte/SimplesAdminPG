@@ -12,7 +12,8 @@ AdminPG::main($conexao);
 ```
 
 **Practical way:**
-docker compose up -d
+
+    $ docker compose up -d
 
 
 Nothing more to say. Just enjoy yourself!
