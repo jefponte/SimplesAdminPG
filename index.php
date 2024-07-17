@@ -107,8 +107,8 @@ if(!isset($_SESSION['ATIVO'])){
 
         }catch(\Exception $e){
             echo $e -> getmessage();
-            unset($_SESSION['dbname']);
-            echo '<meta http-equiv="refresh" content=3;url="./index.php">';
+            // unset($_SESSION['dbname']);
+            // echo '<meta http-equiv="refresh" content=5;url="./index.php">';
         }
 
 

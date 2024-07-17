@@ -149,7 +149,7 @@ class AdminPG
         foreach ($result as $linha) {
 
             $nomeDaTabela = $linha['tabela'];
-            echo '<h1>' . $nomeDaTabela . '</h1>';
+            echo '<h1>'.$linha['esquema'].'.' . $nomeDaTabela . '</h1>';
             $sqlColunas = "select
 			c.relname,
 			a.attname as column,
@@ -204,7 +204,7 @@ class AdminPG
             $n = 10;
 
             echo '<br>' . $n . ' primeiros dados<br>';
-            $sqlPrimeirosDados = "SELECT * FROM $nomeDaTabela LIMIT $n";
+            $sqlPrimeirosDados = 'SELECT * FROM '.$linha['esquema'].'.'.$nomeDaTabela.' LIMIT '.$n;
             $resultPrimeirosDados = $conexao->query($sqlPrimeirosDados);
             $i = 0;
             echo '<table border=1>';
@@ -393,7 +393,7 @@ class AdminPG
             if(isset($_POST['dbname'])){
                 $_SESSION['dbname'] = $_POST['dbname'];
             }
-            echo '<meta http-equiv="refresh" content=0;url="./index.php">';
+            // echo '<meta http-equiv="refresh" content=15;url="./index.php">';
         }catch(\Exception $e){
             echo $e -> getmessage();
         }
@@ -435,7 +435,7 @@ class AdminPG
                                     </div>
                                     <div class="form-group">
                                         <label for="password" class="text-info">Password</label><br>
-                                        <input type="text" name="password" id="password" value="postgres" class="form-control">
+                                        <input type="text" name="password" id="password" value="cocacola@123A" class="form-control">
                                     </div>
                                     <div class="form-group">
                                         <label for="dbname" class="text-info">dbname</label><br>
